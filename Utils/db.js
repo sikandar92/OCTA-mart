@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
+
 const connection = {};
+
 async function connect() {
   if (connection.isConnected) {
     console.log('already connected');
@@ -13,20 +15,12 @@ async function connect() {
     }
     await mongoose.disconnect();
   }
-  const db = await mongoose
-    .connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      // useCreateIndex: true,
-    })
-    .then((res) => {
-      console.log('connected to DB!');
-      console.log('res!', res);
-    })
-    .catch((err) => {
-      console.log('Failed to connect to DB ', err);
-    });
-  console.log('new connection db'), db;
+  const db = await mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    // useCreateIndex: true,
+  });
+  console.log('new connection');
   connection.isConnected = db.connections[0].readyState;
 }
 
@@ -48,5 +42,5 @@ function convertDocToObj(doc) {
   return doc;
 }
 
-const db = { convertDocToObj, connect, disconnect };
+const db = { connect, disconnect, convertDocToObj };
 export default db;
